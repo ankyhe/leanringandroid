@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GeoQuiz</string>
-    <string name="question_text">Constantinople is the largest city in Turkey.</string>
+    <string name="question_text"></string>
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="correct_toast">Correct!</string>
     <string name="wrong_toast">Wrong!</string>
+    <string name="next_button">Next</string>
+    <string name="previous_button">Previous</string>
 </resources>
