@@ -1,6 +1,7 @@
 package com.gmail.at.gerystudio.geoquiz;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,9 +63,30 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button cheatButton = (Button)findViewById(R.id.cheat_button);
+        cheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CheatActivity.class);
+                Question q = QuestionPool.getInstance().current();
+                intent.putExtra("answer", q.trueOrFalse); // just use "answer" for simple
+                startActivityForResult(intent, 0);
+            }
+        });
+
         Question q = QuestionPool.getInstance().current();
         textView.setText(q.questionStr);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(getClass().getSimpleName(), String.format("requestCod:%d resultCode:%d", requestCode, resultCode));
+        if (data.getBooleanExtra("showanswer", false)) {
+            Question q = QuestionPool.getInstance().next();
+            textView.setText(q.questionStr);
+        }
+    }
+
 
     @Override
     protected void onStart() {
