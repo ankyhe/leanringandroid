@@ -2,6 +2,7 @@ package com.gmail.at.gerystudio.geoquiz;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ public class MainActivity extends Activity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(getClass().getSimpleName(), "ENTER onCreate()");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
@@ -59,8 +62,50 @@ public class MainActivity extends Activity {
             }
         });
 
-        Question q = QuestionPool.getInstance().next();
+        Question q = QuestionPool.getInstance().current();
         textView.setText(q.questionStr);
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(getClass().getSimpleName(), "ENTER onStart()");
+        super.onStart();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(getClass().getSimpleName(), "ENTER onRestart()");
+        super.onRestart();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(getClass().getSimpleName(), "ENTER onResume()");
+        super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(getClass().getSimpleName(), "ENTER onPause()");
+        super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(getClass().getSimpleName(), "ENTER onStop()");
+        super.onStop();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(getClass().getSimpleName(), "ENTER onDestroy()");
+        super.onDestroy();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d(getClass().getSimpleName(), "ENTER onSaveInstanceState()");
+        super.onSaveInstanceState(outState);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     private int checkValue(boolean trueOrFalse) {

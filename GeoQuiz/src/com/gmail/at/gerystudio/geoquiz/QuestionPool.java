@@ -33,6 +33,9 @@ public class QuestionPool {
     private List<Question> questions;
     private int idx;
 
+    public Question current() {
+        return questions.get(idx);
+    }
 
     public Question next() {
         if (idx == questions.size() - 1) {
@@ -67,7 +70,7 @@ public class QuestionPool {
         questions.add(q3);
         questions.add(q4);
         questions.add(q5);
-        idx = questions.size() - 1;
+        idx = 0;
     }
 
 }
