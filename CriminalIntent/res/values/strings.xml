@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">CriminalIntent</string>
     <string name="crime_title_hint">Enter the name for a crime</string>
+    <string name="name_title">Title</string>
+    <string name="date_title">Date</string>
+    <string name="details_title">Details</string>
+    <string name="solved_title">Solved</string>
+    <string name="crimes_title">Crime List</string>
 </resources>

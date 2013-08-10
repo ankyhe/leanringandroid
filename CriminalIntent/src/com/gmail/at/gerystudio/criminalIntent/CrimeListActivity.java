@@ -9,9 +9,9 @@ import android.support.v4.app.Fragment;
  * Time: AM12:33
  * To change this template use File | Settings | File Templates.
  */
-public class CrimeActivity extends SimpleFragmentContainerActivity {
+public class CrimeListActivity extends SimpleFragmentContainerActivity {
     @Override
     protected Fragment createFragment() {
-        return new CrimeFragment();
+        return new CrimeListFragment();
     }
 }

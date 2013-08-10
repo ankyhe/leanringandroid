@@ -1,5 +1,8 @@
 package com.gmail.at.gerystudio.criminalIntent.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -12,11 +15,17 @@ import java.util.UUID;
 public class Crime {
 
     private UUID uuid;
-    private String name;
+    private String title;
+    private long datetime;
+    private boolean solved;
 
-    public Crime(String name) {
-        this.uuid = UUID.randomUUID();
-        this.name = name;
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+
+    public Crime(String aName) {
+        uuid = UUID.randomUUID();
+        title = aName;
+        datetime = (new Date()).getTime();
+        solved = false;
     }
 
     public Crime() {
@@ -27,7 +36,37 @@ public class Crime {
         return uuid;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String aTitle) {
+        title = aTitle;
+    }
+
+    public long getDatetime() {
+        return datetime;
+    }
+
+    public String getDatetimeStr() {
+        Date date = new Date(getDatetime());
+        return dateFormat.format(date);
+    }
+
+    public void setDatetime(Date date) {
+        datetime = date.getTime();
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public void setSolved(boolean aSolved) {
+        solved = aSolved;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 }
