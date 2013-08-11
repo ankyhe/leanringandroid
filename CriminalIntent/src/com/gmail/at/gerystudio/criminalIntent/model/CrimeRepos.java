@@ -55,4 +55,13 @@ public class CrimeRepos {
         return null;
     }
 
+    public int getIndexByUUID(UUID uuid) {
+        for (int i = 0; i < crimes.size(); ++i) {
+            if (crimes.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }

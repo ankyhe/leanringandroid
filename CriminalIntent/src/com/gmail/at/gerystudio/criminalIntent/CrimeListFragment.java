@@ -42,7 +42,7 @@ public class CrimeListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(getActivity(), CrimeActivity.class);
+        Intent intent = new Intent(getActivity(), CrimePageActivity.class);
         List<Crime> list = CrimeRepos.getInstance(getActivity()).getCrimeList();
         intent.putExtra(Constants.PARAM_UUID, list.get(position).getUuid());
         startActivity(intent);
