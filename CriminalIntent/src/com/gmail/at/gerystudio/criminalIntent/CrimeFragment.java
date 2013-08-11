@@ -8,15 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.*;
+import com.gmail.at.gerystudio.criminalIntent.model.Constants;
 import com.gmail.at.gerystudio.criminalIntent.model.Crime;
+import com.gmail.at.gerystudio.criminalIntent.model.CrimeRepos;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,10 +30,23 @@ public class CrimeFragment extends Fragment {
 
     private static final String LOG_TAG = CrimeFragment.class.getName();
 
+    public static CrimeFragment newInstance(UUID uuid) {
+        CrimeFragment crimeFragment = new CrimeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.PARAM_UUID, uuid);
+        crimeFragment.setArguments(bundle);
+        return crimeFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crime = new Crime();
+        Bundle bundle = getArguments();
+        UUID uuid = (UUID) bundle.getSerializable(Constants.PARAM_UUID);
+        Crime aCrime = CrimeRepos.getInstance(getActivity()).getCrimeByUUID(uuid);
+        if (aCrime != null) {
+            crime = aCrime;
+        }
     }
 
     @Override
@@ -55,23 +68,28 @@ public class CrimeFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                crime.setTitle(editable.toString());
+                if (crime != null) {
+                    crime.setTitle(editable.toString());
+                }
             }
         });
 
-        Button datetimeButton = (Button)view.findViewById(R.id.datetime_button);
-        Date date = new Date(crime.getDatetime());
-        DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        datetimeButton.setText(df.format(date));
-
-        CheckBox solvedCheckBox = (CheckBox)view.findViewById(R.id.solved_checkbox);
-        solvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Log.d(LOG_TAG, "ENTER checkbox changes");
-                crime.setSolved(b);
-            }
-        });
+        if (crime != null) {
+            titleEditText.setText(crime.getTitle());
+            Button datetimeButton = (Button)view.findViewById(R.id.datetime_button);
+            datetimeButton.setText(crime.getDatetimeStr());
+            CheckBox solvedCheckBox = (CheckBox)view.findViewById(R.id.solved_checkbox);
+            solvedCheckBox.setChecked(crime.isSolved());
+            solvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    Log.d(LOG_TAG, "ENTER checkbox changes");
+                    crime.setSolved(b);
+                }
+            });
+        } else {
+            Log.e(LOG_TAG, "crime is null.");
+        }
 
         return view;
     }

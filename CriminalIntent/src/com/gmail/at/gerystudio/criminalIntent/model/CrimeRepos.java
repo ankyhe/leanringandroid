@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +36,7 @@ public class CrimeRepos {
     private void initRepos() {
         // this is just for test
         for (int i = 0 ; i < 100; ++i) {
-            Crime crime = new Crime(String.format("Crime %d", i));
+            Crime crime = new Crime(String.format("Crime %d", i + 1));
             crime.setSolved((i % 2 == 0));
             crimes.add(crime);
         }
@@ -43,6 +44,15 @@ public class CrimeRepos {
 
     public List<Crime> getCrimeList() {
         return crimes;
+    }
+
+    public Crime getCrimeByUUID(UUID uuid) {
+        for (Crime crime : crimes) {
+            if (crime.getUuid().equals(uuid)) {
+                return crime;
+            }
+        }
+        return null;
     }
 
 }

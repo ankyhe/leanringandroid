@@ -1,17 +1,18 @@
 package com.gmail.at.gerystudio.criminalIntent;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.gmail.at.gerystudio.criminalIntent.model.Constants;
 import com.gmail.at.gerystudio.criminalIntent.model.Crime;
 import com.gmail.at.gerystudio.criminalIntent.model.CrimeRepos;
 import com.gmail.at.gerystudio.criminalIntent.view.CrimeArrayAdapter;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,9 +35,16 @@ public class CrimeListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.d(LOG_TAG, "ENTER onListItemClick");
+    public void onResume() {
+        super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
+        ((CrimeArrayAdapter)getListAdapter()).notifyDataSetChanged();
+    }
 
-        //TODO
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent = new Intent(getActivity(), CrimeActivity.class);
+        List<Crime> list = CrimeRepos.getInstance(getActivity()).getCrimeList();
+        intent.putExtra(Constants.PARAM_UUID, list.get(position).getUuid());
+        startActivity(intent);
     }
 }
