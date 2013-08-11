@@ -24,7 +24,7 @@ public class Crime {
     public Crime(String aName) {
         uuid = UUID.randomUUID();
         title = aName;
-        datetime = (new Date()).getTime();
+        datetime = (new Date()).getTime() - 24 * 3600 * 1000; // one day before
         solved = false;
     }
 

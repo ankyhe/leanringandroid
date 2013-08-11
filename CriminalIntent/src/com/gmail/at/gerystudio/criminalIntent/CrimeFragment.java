@@ -1,7 +1,10 @@
 package com.gmail.at.gerystudio.criminalIntent;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -78,6 +81,16 @@ public class CrimeFragment extends Fragment {
             titleEditText.setText(crime.getTitle());
             Button datetimeButton = (Button)view.findViewById(R.id.datetime_button);
             datetimeButton.setText(crime.getDatetimeStr());
+            datetimeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    DatePickDialogFragment fragment;
+                    fragment = DatePickDialogFragment.newInstance(new Date(crime.getDatetime()));
+                    fragment.setTargetFragment(CrimeFragment.this, Constants.REQUESTCODE_DATE);
+                    fragment.show(fm, "date");
+                }
+            });
             CheckBox solvedCheckBox = (CheckBox)view.findViewById(R.id.solved_checkbox);
             solvedCheckBox.setChecked(crime.isSolved());
             solvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -92,5 +105,17 @@ public class CrimeFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUESTCODE_DATE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Date date = (Date) data.getSerializableExtra(Constants.PARAM_DATE);
+                crime.setDatetime(date);
+                Button datetimeButton = (Button)getView().findViewById(R.id.datetime_button);
+                datetimeButton.setText(crime.getDatetimeStr());
+            }
+        }
     }
 }

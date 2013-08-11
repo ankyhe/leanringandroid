@@ -9,8 +9,12 @@ package com.gmail.at.gerystudio.criminalIntent.model;
  */
 public class Constants {
 
-    public static final String PACKAGE_NAME = Constants.class.getPackage().getName();
+    private static final String PACKAGE_NAME = Constants.class.getPackage().getName();
 
     public static final String PARAM_UUID = PACKAGE_NAME + ".param_uuid";
+
+    public static final String PARAM_DATE = PACKAGE_NAME + ".param_date";
+
+    public static final int REQUESTCODE_DATE = 10;
 
 }
