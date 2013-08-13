@@ -2,13 +2,16 @@ package com.gmail.at.gerystudio.criminalIntent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -50,6 +53,7 @@ public class CrimeFragment extends Fragment {
         if (aCrime != null) {
             crime = aCrime;
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -104,6 +108,12 @@ public class CrimeFragment extends Fragment {
             Log.e(LOG_TAG, "crime is null.");
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (NavUtils.getParentActivityName(getActivity()) != null) {
+                getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        }
+
         return view;
     }
 
@@ -117,5 +127,18 @@ public class CrimeFragment extends Fragment {
                 datetimeButton.setText(crime.getDatetimeStr());
             }
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (NavUtils.getParentActivityName(getActivity()) != null) {
+                NavUtils.navigateUpFromSameTask(getActivity());
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

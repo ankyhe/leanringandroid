@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">月球你好</string>
+    <string name="play_button_title">播放</string>
+    <string name="stop_button_title">停止</string>
+</resources>

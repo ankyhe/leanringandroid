@@ -33,13 +33,10 @@ public class CrimeRepos {
     private Context context;
     private List<Crime> crimes;
 
-    private void initRepos() {
-        // this is just for test
-        for (int i = 0 ; i < 100; ++i) {
-            Crime crime = new Crime(String.format("Crime %d", i + 1));
-            crime.setSolved((i % 2 == 0));
-            crimes.add(crime);
-        }
+    public Crime newCrime() {
+        Crime crime = new Crime();
+        crimes.add(crime);
+        return crime;
     }
 
     public List<Crime> getCrimeList() {
@@ -62,6 +59,13 @@ public class CrimeRepos {
             }
         }
         return -1;
+    }
+
+    public void initRepos() {
+        for (int i = 0 ; i < 5; ++i) {
+            Crime crime = new Crime(String.format("Crime %d", i+1));
+            crimes.add(crime);
+        }
     }
 
 }
