@@ -2,7 +2,6 @@ package com.gmail.at.gerystudio.criminalIntent.model;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,8 +17,8 @@ public class CrimeRepos {
     /* Singleton */
     private CrimeRepos(Context aContext) {
         context = aContext;
-        crimes = new ArrayList<Crime>();
-        initRepos();
+        CrimeReposSerializer serializer = new CrimeReposSerializer(context, "crimeRepos.json");
+        crimes = serializer.loadCrimes();
     }
     private static CrimeRepos instance = null;
     public static CrimeRepos getInstance(Context context) {
@@ -66,6 +65,11 @@ public class CrimeRepos {
             Crime crime = new Crime(String.format("Crime %d", i+1));
             crimes.add(crime);
         }
+    }
+
+    public void saveCrimeRepos() {
+        CrimeReposSerializer serializer = new CrimeReposSerializer(context, "crimeRepos.json");
+        serializer.saveCrimes(crimes);
     }
 
 }

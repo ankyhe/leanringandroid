@@ -14,13 +14,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import com.gmail.at.gerystudio.criminalIntent.model.Constants;
 import com.gmail.at.gerystudio.criminalIntent.model.Crime;
 import com.gmail.at.gerystudio.criminalIntent.model.CrimeRepos;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -140,5 +141,11 @@ public class CrimeFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
+        CrimeRepos.getInstance(getActivity()).saveCrimeRepos();
     }
 }

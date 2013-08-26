@@ -1,5 +1,8 @@
 package com.gmail.at.gerystudio.criminalIntent.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +23,14 @@ public class Crime {
     private boolean solved;
 
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+
+    public Crime(JSONObject json) throws JSONException {
+        uuid = UUID.fromString(json.getString("uuid"));
+        title = json.getString("title");
+        solved = json.getBoolean("solved");
+        datetime = json.getLong("datetime");
+    }
+
 
     public Crime(String aName) {
         uuid = UUID.randomUUID();
@@ -63,6 +74,19 @@ public class Crime {
 
     public void setSolved(boolean aSolved) {
         solved = aSolved;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("uuid", uuid.toString());
+            json.put("title", title);
+            json.put("solved", solved);
+            json.put("datetime", datetime);
+        } catch (JSONException e) {
+            json = new JSONObject();
+        }
+        return json;
     }
 
     @Override
