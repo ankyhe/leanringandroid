@@ -163,6 +163,7 @@ public class CrimeFragment extends Fragment {
         if (item.getItemId() == android.R.id.home) {
             if (NavUtils.getParentActivityName(getActivity()) != null) {
                 NavUtils.navigateUpFromSameTask(getActivity());
+                getActivity().overridePendingTransition(R.anim.right_slide_out, R.anim.right_slide_out);
                 return true;
             }
         }

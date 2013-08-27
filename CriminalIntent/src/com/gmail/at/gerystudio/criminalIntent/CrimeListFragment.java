@@ -105,6 +105,7 @@ public class CrimeListFragment extends ListFragment {
         List<Crime> list = CrimeRepos.getInstance(getActivity()).getCrimeList();
         intent.putExtra(Constants.PARAM_UUID, list.get(position).getUuid());
         startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_in);
     }
 
     @Override
