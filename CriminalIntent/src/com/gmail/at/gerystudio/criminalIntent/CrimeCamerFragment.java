@@ -34,10 +34,10 @@ public class CrimeCamerFragment extends Fragment {
     @SuppressWarnings("deprecation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_crime_camera, container);
+        View v = inflater.inflate(R.layout.fragment_crime_camera, container, false);
 
 
-        final ProgressBar pb = (ProgressBar) v.findViewById(R.id.progressbar);
+        final View pb = v.findViewById(R.id.progressbar_container);
         pb.setVisibility(View.INVISIBLE);
 
         Button takeButton = (Button) v.findViewById(R.id.take_button);

@@ -19,6 +19,7 @@ public class CrimeRepos {
         context = aContext;
         CrimeReposSerializer serializer = new CrimeReposSerializer(context, "crimeRepos.json");
         crimes = serializer.loadCrimes();
+        initRepos();
     }
     private static CrimeRepos instance = null;
     public static CrimeRepos getInstance(Context context) {

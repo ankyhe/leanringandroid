@@ -185,18 +185,19 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();    //To change body of overridden methods use File | Settings | File Templates.
-        PhotoUtils.getScaledDrawable(getActivity(), crime.getPhoto().getFileName());
+        showPhoto();
     }
 
     private void showPhoto() {
         // (Re)set the image button's image based on our photo
         Photo p = crime.getPhoto();
-        BitmapDrawable b = null;
+
         if (p != null) {
             String path = getActivity()
                     .getFileStreamPath(p.getFileName()).getAbsolutePath();
-            b = PhotoUtils.getScaledDrawable(getActivity(), path);
+            BitmapDrawable b = PhotoUtils.getScaledDrawable(getActivity(), path);
+            photoView.setImageDrawable(b);
         }
-        photoView.setImageDrawable(b);
+
     }
 }

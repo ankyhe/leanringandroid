@@ -96,7 +96,9 @@ public class Crime {
             json.put("title", title);
             json.put("solved", solved);
             json.put("datetime", datetime);
-            json.put("photo", photo.getFileName());
+            if (photo != null) {
+                json.put("photo", photo.getFileName());
+            }
         } catch (JSONException e) {
             json = new JSONObject();
         }
