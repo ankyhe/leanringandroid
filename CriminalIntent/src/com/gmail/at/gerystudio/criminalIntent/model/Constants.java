@@ -15,6 +15,10 @@ public class Constants {
 
     public static final String PARAM_DATE = PACKAGE_NAME + ".param_date";
 
+    public static final String PARAM_PHOTO = PACKAGE_NAME + ".param_photo";
+
     public static final int REQUESTCODE_DATE = 10;
+
+    public static final int REQUESTCODE_PHOTO = 11;
 
 }

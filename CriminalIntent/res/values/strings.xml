@@ -9,4 +9,6 @@
     <string name="crimes_title">Crime List</string>
     <string name="datapick_title">Choose date</string>
     <string name="new_crime">New Crime</string>
+    <string name="delete_crime">Delete</string>
+    <string name="take">Take</string>
 </resources>
