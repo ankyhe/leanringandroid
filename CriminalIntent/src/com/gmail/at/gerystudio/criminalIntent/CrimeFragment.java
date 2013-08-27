@@ -3,6 +3,7 @@ package com.gmail.at.gerystudio.criminalIntent;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ import android.widget.*;
 import com.gmail.at.gerystudio.criminalIntent.model.Constants;
 import com.gmail.at.gerystudio.criminalIntent.model.Crime;
 import com.gmail.at.gerystudio.criminalIntent.model.CrimeRepos;
+import com.gmail.at.gerystudio.criminalIntent.model.Photo;
+import com.gmail.at.gerystudio.criminalIntent.utils.PhotoUtils;
 
 import java.util.Date;
 import java.util.UUID;
@@ -32,6 +35,8 @@ import java.util.UUID;
  */
 public class CrimeFragment extends Fragment {
     private Crime crime;
+
+    private ImageView photoView;
 
     private static final String LOG_TAG = CrimeFragment.class.getName();
 
@@ -118,7 +123,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent  = new Intent(getActivity(), CrimeCamerActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.REQUESTCODE_PHOTO);
             }
         });
 
@@ -127,6 +132,8 @@ public class CrimeFragment extends Fragment {
                 !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             takePhotoButton.setEnabled(false);
         }
+
+        photoView = (ImageView)view.findViewById(R.id.photo);
 
 
         return view;
@@ -140,6 +147,12 @@ public class CrimeFragment extends Fragment {
                 crime.setDatetime(date);
                 Button datetimeButton = (Button)getView().findViewById(R.id.datetime_button);
                 datetimeButton.setText(crime.getDatetimeStr());
+            }
+        } else if (requestCode == Constants.REQUESTCODE_PHOTO) {
+            if (resultCode == Activity.RESULT_OK) {
+                String filename  = (String)data.getSerializableExtra(Constants.PARAM_PHOTO);
+                Photo photo = new Photo(filename);
+                crime.setPhoto(photo);
             }
         }
     }
@@ -161,5 +174,29 @@ public class CrimeFragment extends Fragment {
     public void onPause() {
         super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
         CrimeRepos.getInstance(getActivity()).saveCrimeRepos();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();    //To change body of overridden methods use File | Settings | File Templates.
+        PhotoUtils.cleanImageView(photoView);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();    //To change body of overridden methods use File | Settings | File Templates.
+        PhotoUtils.getScaledDrawable(getActivity(), crime.getPhoto().getFileName());
+    }
+
+    private void showPhoto() {
+        // (Re)set the image button's image based on our photo
+        Photo p = crime.getPhoto();
+        BitmapDrawable b = null;
+        if (p != null) {
+            String path = getActivity()
+                    .getFileStreamPath(p.getFileName()).getAbsolutePath();
+            b = PhotoUtils.getScaledDrawable(getActivity(), path);
+        }
+        photoView.setImageDrawable(b);
     }
 }

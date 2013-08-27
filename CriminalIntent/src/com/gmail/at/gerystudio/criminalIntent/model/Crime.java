@@ -21,6 +21,7 @@ public class Crime {
     private String title;
     private long datetime;
     private boolean solved;
+    private Photo photo;
 
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
@@ -29,6 +30,10 @@ public class Crime {
         title = json.getString("title");
         solved = json.getBoolean("solved");
         datetime = json.getLong("datetime");
+        String fileName = json.getString("photo");
+        if (fileName != null) {
+            photo = new Photo(fileName);
+        }
     }
 
 
@@ -76,6 +81,14 @@ public class Crime {
         solved = aSolved;
     }
 
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
+    }
+
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         try {
@@ -83,6 +96,7 @@ public class Crime {
             json.put("title", title);
             json.put("solved", solved);
             json.put("datetime", datetime);
+            json.put("photo", photo.getFileName());
         } catch (JSONException e) {
             json = new JSONObject();
         }
