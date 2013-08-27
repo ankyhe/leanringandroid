@@ -2,6 +2,7 @@ package com.gmail.at.gerystudio.criminalIntent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,10 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.*;
 import com.gmail.at.gerystudio.criminalIntent.model.Constants;
 import com.gmail.at.gerystudio.criminalIntent.model.Crime;
 import com.gmail.at.gerystudio.criminalIntent.model.CrimeRepos;
@@ -114,6 +112,22 @@ public class CrimeFragment extends Fragment {
                 getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
+
+        ImageButton takePhotoButton = (ImageButton)view.findViewById(R.id.take_photo_button);
+        takePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent  = new Intent(getActivity(), CrimeCamerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        PackageManager pm = getActivity().getPackageManager();
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) &&
+                !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            takePhotoButton.setEnabled(false);
+        }
+
 
         return view;
     }

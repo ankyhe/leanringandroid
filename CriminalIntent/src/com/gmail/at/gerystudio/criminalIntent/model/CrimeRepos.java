@@ -60,6 +60,10 @@ public class CrimeRepos {
         return -1;
     }
 
+    public void removeCrime(int idx) {
+        crimes.remove(idx);
+    }
+
     public void initRepos() {
         for (int i = 0 ; i < 5; ++i) {
             Crime crime = new Crime(String.format("Crime %d", i+1));
