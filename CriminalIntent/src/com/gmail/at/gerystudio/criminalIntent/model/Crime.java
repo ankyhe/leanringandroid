@@ -22,6 +22,7 @@ public class Crime {
     private long datetime;
     private boolean solved;
     private Photo photo;
+    private String suspect;
 
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
@@ -33,6 +34,10 @@ public class Crime {
         String fileName = json.getString("photo");
         if (fileName != null) {
             photo = new Photo(fileName);
+        }
+        String aSuspect = json.getString("suspect");
+        if (aSuspect != null) {
+            suspect = aSuspect;
         }
     }
 
@@ -89,6 +94,14 @@ public class Crime {
         this.photo = photo;
     }
 
+    public String getSuspect() {
+        return suspect;
+    }
+
+    public void setSuspect(String suspect) {
+        this.suspect = suspect;
+    }
+
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         try {
@@ -99,10 +112,19 @@ public class Crime {
             if (photo != null) {
                 json.put("photo", photo.getFileName());
             }
+            if (suspect != null) {
+                json.put("suspect", suspect);
+            }
         } catch (JSONException e) {
             json = new JSONObject();
         }
         return json;
+    }
+
+    public String toReport() {
+        Date date = new Date(datetime);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return String.format("Title:%s\nDateTime:%s\nSuspect:%s", title, df.format(date), (suspect != null ? suspect : "Unknown"));
     }
 
     @Override

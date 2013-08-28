@@ -11,4 +11,8 @@
     <string name="new_crime">New Crime</string>
     <string name="delete_crime">Delete</string>
     <string name="take">Take</string>
+    <string name="Suspect">Suspect</string>
+    <string name="SendMessage">Send</string>
+    <string name="send_report">Send Report</string>
+    <string name="suspect">Suspect</string>
 </resources>

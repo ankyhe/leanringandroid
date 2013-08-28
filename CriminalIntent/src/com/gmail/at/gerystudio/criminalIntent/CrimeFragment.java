@@ -3,9 +3,12 @@ package com.gmail.at.gerystudio.criminalIntent;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
@@ -37,6 +40,7 @@ public class CrimeFragment extends Fragment {
     private Crime crime;
 
     private ImageView photoView;
+    private Button suspectButton;
 
     private static final String LOG_TAG = CrimeFragment.class.getName();
 
@@ -136,6 +140,31 @@ public class CrimeFragment extends Fragment {
         photoView = (ImageView)view.findViewById(R.id.photo);
 
 
+        Button sendButton = (Button)view.findViewById(R.id.sendmessage_button);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, crime.toReport());
+                intent = Intent.createChooser(intent, getString(R.string.send_report));
+                startActivity(intent);
+            }
+        });
+
+        suspectButton = (Button)view.findViewById(R.id.suspect_button);
+        suspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(i, Constants.REQUESTCODE_CONTACT);
+
+            }
+        });
+
+        String title = crime.getSuspect() == null ? getString(R.string.suspect) : crime.getSuspect();
+        suspectButton.setText(title);
         return view;
     }
 
@@ -153,6 +182,34 @@ public class CrimeFragment extends Fragment {
                 String filename  = (String)data.getSerializableExtra(Constants.PARAM_PHOTO);
                 Photo photo = new Photo(filename);
                 crime.setPhoto(photo);
+            }
+        } else if (requestCode == Constants.REQUESTCODE_CONTACT) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri contactUri = data.getData();
+
+                // Specify which fields you want your query to return
+                // values for.
+                String[] queryFields = new String[] {
+                        ContactsContract.Contacts.DISPLAY_NAME
+                };
+                // Perform your query - the contactUri is like a "where"
+                // clause here
+                Cursor c = getActivity().getContentResolver()
+                        .query(contactUri, queryFields, null, null, null);
+
+                // Double-check that you actually got results
+                if (c.getCount() == 0) {
+                    c.close();
+                    return;
+                }
+
+                // Pull out the first column of the first row of data -
+                // that is your suspect's name.
+                c.moveToFirst();
+                String suspect = c.getString(0);
+                crime.setSuspect(suspect);
+                suspectButton.setText(suspect);
+                c.close();
             }
         }
     }

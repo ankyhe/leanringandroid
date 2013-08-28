@@ -21,4 +21,6 @@ public class Constants {
 
     public static final int REQUESTCODE_PHOTO = 11;
 
+    public static final int REQUESTCODE_CONTACT = 12;
+
 }
