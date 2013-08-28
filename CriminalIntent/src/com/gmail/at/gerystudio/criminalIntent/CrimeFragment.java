@@ -44,6 +44,12 @@ public class CrimeFragment extends Fragment {
 
     private static final String LOG_TAG = CrimeFragment.class.getName();
 
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
+    }
+
+    private Callbacks callbacks;
+
     public static CrimeFragment newInstance(UUID uuid) {
         CrimeFragment crimeFragment = new CrimeFragment();
         Bundle bundle = new Bundle();
@@ -110,6 +116,9 @@ public class CrimeFragment extends Fragment {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     Log.d(LOG_TAG, "ENTER checkbox changes");
                     crime.setSolved(b);
+                    if (callbacks != null) {
+                        callbacks.onCrimeUpdated(crime);
+                    }
                 }
             });
         } else {
@@ -123,18 +132,22 @@ public class CrimeFragment extends Fragment {
         }
 
         ImageButton takePhotoButton = (ImageButton)view.findViewById(R.id.take_photo_button);
-        takePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent  = new Intent(getActivity(), CrimeCamerActivity.class);
-                startActivityForResult(intent, Constants.REQUESTCODE_PHOTO);
-            }
-        });
+        if (takePhotoButton != null) {
+            takePhotoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), CrimeCamerActivity.class);
+                    startActivityForResult(intent, Constants.REQUESTCODE_PHOTO);
+                }
+            });
+        }
 
         PackageManager pm = getActivity().getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) &&
                 !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            takePhotoButton.setEnabled(false);
+            if (takePhotoButton != null) {
+                takePhotoButton.setEnabled(false);
+            }
         }
 
         photoView = (ImageView)view.findViewById(R.id.photo);
@@ -165,6 +178,9 @@ public class CrimeFragment extends Fragment {
 
         String title = crime.getSuspect() == null ? getString(R.string.suspect) : crime.getSuspect();
         suspectButton.setText(title);
+        if (callbacks != null) {
+            callbacks.onCrimeUpdated(crime);
+        }
         return view;
     }
 
@@ -176,6 +192,9 @@ public class CrimeFragment extends Fragment {
                 crime.setDatetime(date);
                 Button datetimeButton = (Button)getView().findViewById(R.id.datetime_button);
                 datetimeButton.setText(crime.getDatetimeStr());
+                if (callbacks != null) {
+                    callbacks.onCrimeUpdated(crime);
+                }
             }
         } else if (requestCode == Constants.REQUESTCODE_PHOTO) {
             if (resultCode == Activity.RESULT_OK) {
@@ -209,6 +228,9 @@ public class CrimeFragment extends Fragment {
                 String suspect = c.getString(0);
                 crime.setSuspect(suspect);
                 suspectButton.setText(suspect);
+                if (callbacks != null) {
+                    callbacks.onCrimeUpdated(crime);
+                }
                 c.close();
             }
         }
@@ -257,5 +279,17 @@ public class CrimeFragment extends Fragment {
             photoView.setImageDrawable(b);
         }
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        callbacks = (Callbacks)activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
     }
 }

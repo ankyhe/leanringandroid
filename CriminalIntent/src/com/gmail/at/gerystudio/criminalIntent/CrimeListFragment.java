@@ -1,6 +1,7 @@
 package com.gmail.at.gerystudio.criminalIntent;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -25,6 +26,15 @@ import java.util.List;
 public class CrimeListFragment extends ListFragment {
 
     private static final String LOG_TAG = CrimeListFragment.class.getName();
+
+
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+
+    }
+
+    private Callbacks callbacks;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,11 +111,11 @@ public class CrimeListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(getActivity(), CrimePageActivity.class);
         List<Crime> list = CrimeRepos.getInstance(getActivity()).getCrimeList();
-        intent.putExtra(Constants.PARAM_UUID, list.get(position).getUuid());
-        startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_in);
+        Crime crime = list.get(position);
+        if (callbacks != null) {
+            callbacks.onCrimeSelected(crime);
+        }
     }
 
     @Override
@@ -119,5 +129,21 @@ public class CrimeListFragment extends ListFragment {
             return true;
         }
         return super.onOptionsItemSelected(item);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);    //To change body of overridden methods use File | Settings | File Templates.
+        callbacks = (Callbacks)activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();    //To change body of overridden methods use File | Settings | File Templates.
+        callbacks = null;
+    }
+
+    public void updateUI() {
+        ((CrimeArrayAdapter)getListAdapter()).notifyDataSetChanged();
     }
 }

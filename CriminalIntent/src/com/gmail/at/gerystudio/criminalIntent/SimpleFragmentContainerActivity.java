@@ -16,7 +16,7 @@ public abstract class SimpleFragmentContainerActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
-        setContentView(R.layout.activity_crime);
+        setContentView(getLayoutResId());
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment crimeFragment = fm.findFragmentById(R.id.fragmentContainer);
@@ -27,4 +27,8 @@ public abstract class SimpleFragmentContainerActivity extends FragmentActivity {
     }
 
     protected abstract Fragment createFragment();
+
+    protected int getLayoutResId() {
+        return R.layout.activity_masterdetail;
+    }
 }
