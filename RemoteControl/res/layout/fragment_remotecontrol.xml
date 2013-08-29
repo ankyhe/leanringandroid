@@ -12,7 +12,8 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="0"
-            android:textSize="50dp"/>
+            android:textSize="50dp"
+            android:background="@drawable/window_patch"/>
     <TextView
             android:id="@+id/fragment_remote_control_workingTextView"
             android:layout_width="match_parent"
