@@ -58,9 +58,6 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-
-
-
     private void setupAdaptor() {
         if (getActivity() == null || gridView == null) return;
 
