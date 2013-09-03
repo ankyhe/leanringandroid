@@ -1,19 +1,28 @@
 package com.gmail.at.ankyhe.photogallery;
 
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import com.gmail.at.ankyhe.photogallery.controller.DownloadHanderThread;
 import com.gmail.at.ankyhe.photogallery.controller.FlickrFetcher;
+import com.gmail.at.ankyhe.photogallery.model.Constants;
 import com.gmail.at.ankyhe.photogallery.model.GalleryItem;
 
 import java.util.ArrayList;
@@ -57,8 +66,9 @@ public class PhotoGalleryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
+        setHasOptionsMenu(true);
         setRetainInstance(true);
-        new FetchItemsTask().execute();
+        updateItems();
         downloadThread = new DownloadHanderThread<ImageView>(new Handler() {});
         downloadThread.setDownloadListener(new DownloadHanderThread.DownloadListener<ImageView>() {
             @Override
@@ -81,6 +91,39 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     @Override
+    @TargetApi(11)
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_photo_gallery, menu);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Pull out the SearchView
+            MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+            SearchView searchView = (SearchView)searchItem.getActionView();
+
+            // Get the data from our searchable.xml as a SearchableInfo
+            SearchManager searchManager = (SearchManager)getActivity()
+                    .getSystemService(Context.SEARCH_SERVICE);
+            ComponentName name = getActivity().getComponentName();
+            SearchableInfo searchInfo = searchManager.getSearchableInfo(name);
+            searchView.setSearchableInfo(searchInfo);
+
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_search:
+                getActivity().onSearchRequested();
+                return true;
+            case R.id.menu_item_clear:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         downloadThread.quit();
@@ -95,7 +138,21 @@ public class PhotoGalleryFragment extends Fragment {
     private class FetchItemsTask extends AsyncTask<Void, Void, ArrayList<GalleryItem>> {
         @Override
         protected ArrayList<GalleryItem> doInBackground(Void... params) {
-            return new FlickrFetcher().fetchItems();
+            Activity activity = getActivity();
+            if (activity == null)
+                return new ArrayList<GalleryItem>();
+
+            String query = PreferenceManager.getDefaultSharedPreferences(activity)
+                    .getString(Constants.PREF_SEARCH_QUERY, null);
+            if (query != null && !query.equals("")) {
+                Log.i(LOG_TAG, "search");
+                PreferenceManager.getDefaultSharedPreferences(activity).edit().putString(
+                        Constants.PREF_SEARCH_QUERY, ""
+                ).commit();
+                return new FlickrFetcher().search(query);
+            } else {
+                return new FlickrFetcher().fetchItems();
+            }
         }
 
         @Override
@@ -103,6 +160,12 @@ public class PhotoGalleryFragment extends Fragment {
             items = theItems;
             setupAdaptor();
         }
+    }
+
+
+
+    public void updateItems() {
+        new FetchItemsTask().execute();
     }
 
     private void setupAdaptor() {
