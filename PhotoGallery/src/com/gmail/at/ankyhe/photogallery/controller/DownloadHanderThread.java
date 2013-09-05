@@ -30,7 +30,7 @@ public class DownloadHanderThread<TokenType> extends HandlerThread {
     private Handler responseHandler;
 
     public interface DownloadListener<TokenType> {
-        void afterDownload(TokenType token, Bitmap thumbnail);
+        void afterDownload(TokenType token, String url, Bitmap thumbnail);
     }
 
     DownloadListener<TokenType> downloadListener;
@@ -91,7 +91,7 @@ public class DownloadHanderThread<TokenType> extends HandlerThread {
                         return;
                     }
                     map.remove(token);
-                    downloadListener.afterDownload(token, bitmap);
+                    downloadListener.afterDownload(token, url, bitmap);
                 }
             });
 

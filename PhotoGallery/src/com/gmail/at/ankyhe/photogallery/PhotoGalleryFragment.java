@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.*;
 import android.widget.ArrayAdapter;
@@ -39,6 +40,8 @@ public class PhotoGalleryFragment extends Fragment {
 
     private static final String LOG_TAG = PhotoGalleryFragment.class.getName();
 
+    private LruCache<String, Bitmap> imageCache;
+
     private GridView gridView;
     private List<GalleryItem> items;
     private DownloadHanderThread<ImageView> downloadThread;
@@ -56,9 +59,16 @@ public class PhotoGalleryFragment extends Fragment {
             }
             ImageView imageView = (ImageView)convertView
                     .findViewById(R.id.gallery_item_imageview);
-            imageView.setImageResource(R.drawable.placeholder);
+
             GalleryItem item = getItem(position);
-            downloadThread.queue(imageView, item.getUrl());
+
+            Bitmap bitmap = imageCache.get(item.getUrl());
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                imageView.setImageResource(R.drawable.placeholder);
+                downloadThread.queue(imageView, item.getUrl());
+            }
             return convertView;
         }
     }
@@ -68,14 +78,30 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
         setHasOptionsMenu(true);
         setRetainInstance(true);
+
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 8;
+
+        imageCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+
         updateItems();
         downloadThread = new DownloadHanderThread<ImageView>(new Handler() {});
         downloadThread.setDownloadListener(new DownloadHanderThread.DownloadListener<ImageView>() {
             @Override
-            public void afterDownload(ImageView imageView, Bitmap thumbnail) {
+            public void afterDownload(ImageView imageView, String url, Bitmap thumbnail) {
                 if (isVisible()) {
                     imageView.setImageBitmap(thumbnail);
                 }
+                imageCache.put(url, thumbnail);
             }
         });
         downloadThread.start();
@@ -107,6 +133,17 @@ public class PhotoGalleryFragment extends Fragment {
             SearchableInfo searchInfo = searchManager.getSearchableInfo(name);
             searchView.setSearchableInfo(searchInfo);
 
+            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                @Override
+                public boolean onClose() {
+                    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(
+                            Constants.PREF_SEARCH_QUERY, ""
+                    ).commit();
+                    updateItems();
+                    return false;
+                }
+            });
+
         }
     }
 
@@ -117,6 +154,11 @@ public class PhotoGalleryFragment extends Fragment {
                 getActivity().onSearchRequested();
                 return true;
             case R.id.menu_item_clear:
+                Log.d(LOG_TAG, "clear");
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(
+                        Constants.PREF_SEARCH_QUERY, ""
+                ).commit();
+                updateItems();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
