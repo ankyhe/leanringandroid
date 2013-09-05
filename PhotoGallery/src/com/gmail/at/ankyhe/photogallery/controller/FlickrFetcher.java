@@ -30,8 +30,10 @@ public class FlickrFetcher {
     private static final String API_KEY = "2f99b5861356d714160fdf240420d326";
     private static final String METHOD_GET_RECENT = "flickr.photos.getRecent";
     private static final String PARAM_EXTRAS = "extras";
+    private static final String PARAM_PER_PAGE = "per_page";
 
     private static final String EXTRA_SMALL_URL = "url_s";
+    private static final String PER_PAGE_VALUE = "20";
 
     private static final String XML_PHOTO = "photo";
 
@@ -114,6 +116,7 @@ public class FlickrFetcher {
                 .appendQueryParameter("method", METHOD_GET_RECENT)
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter(PARAM_EXTRAS, EXTRA_SMALL_URL)
+                .appendQueryParameter(PARAM_PER_PAGE, PER_PAGE_VALUE)
                 .build().toString();
         return downloadGalleryItems(url);
     }
@@ -123,6 +126,7 @@ public class FlickrFetcher {
                 .appendQueryParameter("method", METHOD_SEARCH)
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter(PARAM_EXTRAS, EXTRA_SMALL_URL)
+                .appendQueryParameter(PARAM_PER_PAGE, PER_PAGE_VALUE)
                 .appendQueryParameter(PARAM_TEXT, query)
                 .build().toString();
         return downloadGalleryItems(url);
