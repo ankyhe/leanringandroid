@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.*;
@@ -36,7 +35,7 @@ import java.util.List;
  * Time: 1:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PhotoGalleryFragment extends Fragment {
+public class PhotoGalleryFragment extends VisibleFragment {
 
     private static final String LOG_TAG = PhotoGalleryFragment.class.getName();
 
