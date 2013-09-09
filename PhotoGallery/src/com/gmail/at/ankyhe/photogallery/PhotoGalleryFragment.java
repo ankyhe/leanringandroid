@@ -7,7 +7,9 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,10 +18,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.*;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.SearchView;
+import android.widget.*;
 import com.gmail.at.ankyhe.photogallery.controller.DownloadHanderThread;
 import com.gmail.at.ankyhe.photogallery.controller.FlickrFetcher;
 import com.gmail.at.ankyhe.photogallery.model.Constants;
@@ -112,6 +111,16 @@ public class PhotoGalleryFragment extends VisibleFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_photogallery, container, false);
         gridView = (GridView)v.findViewById(R.id.gridView);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                GalleryItem item = items.get(pos);
+                Uri photoPageUri = Uri.parse(item.getPhotoPageUrl());
+                Intent i = new Intent(getActivity(), PhotoViewActivity.class);
+                i.setData(photoPageUri);
+                startActivity(i);
+            }
+        });
         setupAdaptor();
         return v;
     }

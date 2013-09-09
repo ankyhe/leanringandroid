@@ -12,6 +12,8 @@ public class GalleryItem {
     private String caption;
     private String id;
     private String url;
+    private String owner;
+
 
     public String getCaption() {
         return caption;
@@ -35,6 +37,18 @@ public class GalleryItem {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getPhotoPageUrl() {
+        return String.format("http://www.flickr.com/photos/%s/%s", owner, id);
     }
 
     @Override
