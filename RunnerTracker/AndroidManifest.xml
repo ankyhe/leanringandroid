@@ -8,12 +8,15 @@
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name="com.gmail.at.gerystudio.runnertracker.controller.RunnerTrackerActivity"
                   android:label="@string/app_name">
+        </activity>
+        <activity android:name="com.gmail.at.gerystudio.runnertracker.controller.RunListActivity"
+                  android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <receiver android:name="com.gmail.at.gerystudio.runnertracker.controller.RunnerReceiver"
+        <receiver android:name="com.gmail.at.gerystudio.runnertracker.controller.TrackingLocationReceiver"
                   android:exported="false">
             <intent-filter>
                 <action android:name="com.gmail.at.gerystudio.runnertracker.location_action"/>

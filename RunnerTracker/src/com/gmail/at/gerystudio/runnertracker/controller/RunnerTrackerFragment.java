@@ -67,15 +67,14 @@ public class RunnerTrackerFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rm.startLocationUpdates();
-                run = new Run();
+                run = rm.startNewRun();
                 updateUI();
             }
         });
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rm.stopLocationUpdates();
+                rm.stopRun();
                 updateUI();
             }
         });

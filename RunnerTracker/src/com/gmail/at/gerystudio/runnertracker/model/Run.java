@@ -10,9 +10,11 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class Run {
+    private long mId;
     private Date mStartDate;
 
     public Run() {
+        mId = -1;
         mStartDate = new Date();
     }
 
@@ -22,6 +24,14 @@ public class Run {
 
     public void setStartDate(Date startDate) {
         mStartDate = startDate;
+    }
+
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
     }
 
     public int getDurationSeconds(long endMillis) {
